@@ -1,0 +1,14 @@
+"""Advent of Code <YEAR> Day <DAY>: <TITLE>"""
+
+from loguru import logger
+
+from advent_of_code import reader
+from advent_of_code import tools
+
+
+def solve(test: bool = True):
+    pass
+
+
+if __name__ == "__main__":
+    solve()

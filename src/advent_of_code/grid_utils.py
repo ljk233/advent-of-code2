@@ -1,11 +1,12 @@
+import heapq
 import itertools as it
-from collections.abc import Generator, Sequence
+from collections.abc import Callable, Generator, Sequence
 from dataclasses import dataclass, field
 from functools import cache
-from typing import Any, Self, TypeAlias
+from typing import Any, Optional, Self, TypeAlias
 
 AnyGrid: TypeAlias = Sequence[Sequence[Any]]
-AnyRaggedGrid: TypeAlias = Sequence[Sequence[Any]]
+AnyRaggedGrid: TypeAlias = Sequence[Sequence]
 
 ORTHOGONAL_DELTAS = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 DIAGONAL_DELTAS = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
@@ -96,6 +97,10 @@ def get_deltas() -> tuple[Point, ...]:
     return tuple(Point(i, j) for i, j in ORTHOGONAL_DELTAS + DIAGONAL_DELTAS)
 
 
+def origin_point() -> Point:
+    return Point(0, 0)
+
+
 # --- Grid Utilities --- #
 
 
@@ -159,10 +164,38 @@ def shape(grid: AnyGrid) -> tuple[int, int]:
     return len(grid), len(grid[0])
 
 
-def transpose(grid: AnyGrid) -> AnyGrid:
+def transpose[T](grid: Sequence[Sequence[T]]) -> list[list[T]]:
     return [[item for item in row] for row in it.zip_longest(*grid)]
 
 
 def value_at(grid: AnyGrid, p: Point) -> Any:
     """Safe or direct access helper."""
     return grid[p.i][p.j]
+
+
+def shortest_paths[T](
+    start: T,
+    get_neighbors: Callable[[T], list[tuple[T, int]]],
+    target: Optional[T] = None,
+) -> tuple[dict[T, int], dict[T, T]]:
+    distances: dict[T, int] = {start: 0}
+    predecessors: dict[T, T] = {}
+    pq = [(0, start)]
+    while pq:
+        current_risk, current_node = heapq.heappop(pq)
+
+        if current_risk > distances.get(current_node, float("inf")):
+            continue
+
+        if target is not None and current_node == target:
+            break
+
+        for neighbor, cost in get_neighbors(current_node):
+            new_risk = current_risk + cost
+
+            if new_risk < distances.get(neighbor, float("inf")):
+                distances[neighbor] = new_risk
+                predecessors[neighbor] = current_node
+                heapq.heappush(pq, (new_risk, neighbor))
+
+    return distances, predecessors

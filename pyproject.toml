@@ -1,0 +1,24 @@
+[project]
+name = "advent-of-code"
+version = "0.1.0"
+description = "My Advent of Code solutions"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "loguru>=0.7.3",
+    "more-itertools>=10.8.0",
+    "networkx>=3.6.1",
+    "parse>=1.21.0",
+    "scipy>=1.17.0",
+]
+
+[tool.ruff]
+select = ["E", "F", "I"]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -29,7 +29,7 @@ def read_lines2(
 
 def read2(year: int, day: int, test: bool = False, test_num: int = 1) -> str:
     day_str = f"{day:02d}"
-    if test:
+    if test and test_num >= 2:
         day_str += f"_{test_num}"
 
     file = f"{day_str}.txt"

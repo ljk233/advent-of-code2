@@ -1,14 +1,23 @@
-"""Advent of Code <YEAR> Day <DAY>: <TITLE>"""
+"""Advent of Code {{YEAR}} Day {{DAY}}: <TITLE>"""
 
-from loguru import logger
+from advent_of_code import reader, tools
 
-from advent_of_code import reader
-from advent_of_code import tools
+YEAR, DAY, TEST = {{YEAR}}, {{DAY}}, True
 
 
 def solve(test: bool = True):
+    input_data = reader.read_lines2(YEAR, DAY, test=TEST)
+
+
+@tools.log(part=1)
+def part1():
+    pass
+
+
+@tools.log(part=2)
+def part2():
     pass
 
 
 if __name__ == "__main__":
-    solve()
+    solve(test=True)
